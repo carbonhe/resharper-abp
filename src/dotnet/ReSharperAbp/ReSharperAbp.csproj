@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
@@ -15,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK" Version="$(SdkVersion)" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Rider.RiderTutorials" Version="212.0.20210730.170511" />
     <!-- TODO: https://github.com/NuGet/Home/issues/7154 -->
     <PackageReference Include="Wave" Version="[$(WaveVersion),$(UpperWaveVersion))" />
   </ItemGroup>
@@ -25,6 +27,13 @@
     <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).pdb" PackagePath="dotFiles" Pack="true" />
 
     <!-- TODO: add additional assemblies -->
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="JetBrains.Common.Util.Navigation, Version=777.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325">
+      <HintPath>..\..\..\..\..\.gradle\caches\modules-2\files-2.1\com.jetbrains.intellij.rider\riderRD\2021.2\a9ef7670ed1ce9867cfdf6dfc73782362db29322\riderRD-2021.2\plugins\dotCommon\DotFiles\JetBrains.Common.Util.Navigation.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <!-- WARNING: ReSharper plugins with icons must be compiled using PowerShell scripts -->

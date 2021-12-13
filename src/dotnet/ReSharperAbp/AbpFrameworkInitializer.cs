@@ -17,8 +17,6 @@ namespace ReSharperAbp
     [SolutionComponent]
     public class AbpFrameworkInitializer : IChangeProvider
     {
-        public const string HighlightingGroupId = "AbpFramework";
-
         private static readonly ICollection<AssemblyNameInfo> AbpAssemblyNames = new HashSet<AssemblyNameInfo>
         {
             AssemblyNameInfoFactory.Create(VNextAbpChecker.PackageName),

@@ -8,7 +8,7 @@ namespace ReSharperAbp.Modular
     [RegisterConfigurableSeverity(
         SeverityId,
         null,
-        AbpFrameworkInitializer.HighlightingGroupId,
+        AbpHighlightingGroup.Id,
         SeverityId,
         null,
         Severity.ERROR)]
@@ -17,13 +17,13 @@ namespace ReSharperAbp.Modular
         CSharpLanguage.Name,
         OverlapResolve = OverlapResolveKind.NONE,
         OverloadResolvePriority = 0)]
-    public class IncorrectDependencyError : IHighlighting
+    public class NotAnAbpModuleError : IHighlighting
     {
-        private const string SeverityId = "IncorrectAbpModuleDependency";
+        private const string SeverityId = "Not an Abp module";
         private readonly ITypeofExpression _exp;
 
 
-        public IncorrectDependencyError(ITypeofExpression exp)
+        public NotAnAbpModuleError(ITypeofExpression exp)
         {
             _exp = exp;
         }
@@ -37,7 +37,7 @@ namespace ReSharperAbp.Modular
         }
 
         public string ToolTip =>
-            $"Abp: {_exp.ArgumentType} is not an module";
+            $"{_exp.ArgumentType} is not an Abp module";
 
         public string ErrorStripeToolTip => ToolTip;
     }

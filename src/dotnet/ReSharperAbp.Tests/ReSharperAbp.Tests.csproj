@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReSharperAbp\ReSharperAbp.csproj" />
     <ProjectReference Include="..\ReSharperAbp\ReSharperAbp.Rider.csproj" />
   </ItemGroup>
 

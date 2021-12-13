@@ -5,7 +5,13 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReSharperAbp.Modular
 {
-
+    [RegisterConfigurableSeverity(
+        SeverityId,
+        null,
+        AbpHighlightingGroup.Id,
+        SeverityId,
+        null,
+        Severity.ERROR)]
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -26,7 +32,7 @@ namespace ReSharperAbp.Modular
 
         public DocumentRange CalculateRange() => _attribute.GetHighlightingRange();
 
-        public string ToolTip => "Abp: DependsOn attribute can only decorate an module";
+        public string ToolTip => "DependsOn attribute can only decorate an Abp module";
         public string ErrorStripeToolTip => ToolTip;
     }
 }

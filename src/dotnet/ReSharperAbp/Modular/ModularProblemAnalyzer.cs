@@ -7,7 +7,7 @@ namespace ReSharperAbp.Modular
 {
     [ElementProblemAnalyzer(
         typeof(ITypeofExpression), typeof(IAttribute),
-        HighlightingTypes = new[] { typeof(IncorrectDependencyError), typeof(InvalidDependsOnError) })]
+        HighlightingTypes = new[] { typeof(NotAnAbpModuleError), typeof(InvalidDependsOnError) })]
     public class ModularProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
     {
         protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data,
@@ -50,7 +50,7 @@ namespace ReSharperAbp.Modular
                 || usage.ScalarTypeName.Reference.Resolve().Result.DeclaredElement is not IClass clazz
                 || !element.GetChecker().IsAbpModule(clazz))
             {
-                consumer.AddHighlighting(new IncorrectDependencyError(element));
+                consumer.AddHighlighting(new NotAnAbpModuleError(element));
             }
         }
     }
