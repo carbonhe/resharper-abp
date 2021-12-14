@@ -8,6 +8,7 @@ using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Assemblies.Impl;
 using JetBrains.ProjectModel.Tasks;
+using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
 using JetBrains.Util.Reflection;
 using ReSharperAbp.Checker;
@@ -30,6 +31,9 @@ namespace ReSharperAbp
         private readonly ModuleReferenceResolveSync _moduleReferenceResolveSync;
         private readonly IViewableProjectsCollection _projectView;
 
+        public static ISolution Solution { get; private set; }
+
+
         public bool HasReferenceAbp => _solution.GetTopLevelProjects().Any(p => p.GetData(AbpChecker.Key) != null);
 
 
@@ -41,6 +45,7 @@ namespace ReSharperAbp
             IViewableProjectsCollection projectView)
         {
             _solution = solution;
+            Solution = solution;
             _changeManager = changeManager;
             _lifetime = lifetime;
             _moduleReferenceResolveSync = moduleReferenceResolveSync;

@@ -40,7 +40,7 @@ namespace ReSharperAbp.Modular
         private static void ProcessIncorrectDependency(ITypeofExpression element,
             IHighlightingConsumer consumer)
         {
-            if (!element.GetParentOfType<IAttribute>().IsDependsOnAttribute())
+            if (!element.TypeName.IsValid() || !element.GetParentOfType<IAttribute>().IsDependsOnAttribute())
             {
                 return;
             }

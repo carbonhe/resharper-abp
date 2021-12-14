@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Caches;
+using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Impl.Types;
+using JetBrains.ReSharper.Psi.Search;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
@@ -17,6 +22,28 @@ namespace ReSharperAbp.Modular
         public ModuleFinder(AbpChecker checker)
         {
             _checker = checker;
+        }
+
+
+        public IEnumerable<ModuleInfo> FindAllAbpModules()
+        {
+            var psiServices = AbpFrameworkInitializer.Solution.GetPsiServices();
+            var symbolScope = psiServices.Symbols
+                .GetSymbolScope(LibrarySymbolScope.REFERENCED, true);
+
+            var abpTypeElement =
+                symbolScope.GetTypeElementByCLRName(new ClrTypeName(_checker.BuiltinTypes.ModuleClass));
+            if (abpTypeElement == null)
+            {
+                return null;
+            }
+
+            var references = psiServices.Finder
+                .FindAllInheritors(new DeclaredTypeFromCLRName(new ClrTypeName(_checker.BuiltinTypes.ModuleClass),
+                    NullableAnnotation.Unknown, abpTypeElement.Module));
+
+            return references.Select(r => r.Resolve().DeclaredElement).OfType<IClass>()
+                .Where(c => _checker.IsAbpModule(c)).Select(c => ModuleInfo.Create(c, _checker));
         }
 
 
