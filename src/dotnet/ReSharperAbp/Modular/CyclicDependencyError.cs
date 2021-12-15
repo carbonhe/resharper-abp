@@ -17,22 +17,22 @@ namespace ReSharperAbp.Modular
         CSharpLanguage.Name,
         OverlapResolve = OverlapResolveKind.NONE,
         OverloadResolvePriority = 0)]
-    public class InvalidDependsOnError : IHighlighting
+    public class CyclicDependencyError : IHighlighting
     {
-        private const string SeverityId = "Invalid DependsOn attribute";
+        private readonly IClassDeclaration _declaration;
 
-        private readonly IAttribute _attribute;
-
-        public InvalidDependsOnError(IAttribute attribute)
+        public CyclicDependencyError(IClassDeclaration declaration, string toolTip)
         {
-            _attribute = attribute;
+            ToolTip = toolTip;
+            _declaration = declaration;
         }
 
-        public bool IsValid() => _attribute == null || _attribute.IsValid();
+        private const string SeverityId = "Module cyclic dependency";
 
-        public DocumentRange CalculateRange() => _attribute.GetHighlightingRange();
+        public bool IsValid() => _declaration == null || _declaration.IsValid();
 
-        public string ToolTip => "DependsOn attribute can only decorate an Abp module";
+        public DocumentRange CalculateRange() => _declaration.NameIdentifier.GetHighlightingRange();
+        public string ToolTip { get; }
         public string ErrorStripeToolTip => ToolTip;
     }
 }

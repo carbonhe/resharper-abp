@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.RiderTutorials.Utils;
 using ReSharperAbp.Checker;
 
 namespace ReSharperAbp.Modular
@@ -33,6 +33,11 @@ namespace ReSharperAbp.Modular
             _checker = checker;
         }
 
+        public override string ToString()
+        {
+            return $"Abp module: {Class.GetFullClrName()}";
+        }
+
         [Pure]
         public bool HasDependsOnAttribute()
         {
@@ -56,7 +61,7 @@ namespace ReSharperAbp.Modular
                         var moduleClass = value.TypeValue.GetClassType();
                         if (moduleClass != null && _checker.IsAbpModule(moduleClass))
                         {
-                            yield return ModuleInfo.Create(moduleClass, _checker);
+                            yield return Create(moduleClass, _checker);
                         }
                     }
                 }

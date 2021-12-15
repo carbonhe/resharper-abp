@@ -41,12 +41,12 @@ namespace ReSharperAbp.Modular
 
             if (clazz != null && checker != null && checker.IsAbpModule(clazz))
             {
-                var dependencies = checker.ModuleFinder.FindAllDependencies(clazz);
-                if (dependencies != null)
+                var result = checker.ModuleFinder.FindDependencies(clazz);
+                if (result.Dependencies != null)
                 {
-                    foreach (var dependency in dependencies)
+                    foreach (var module in result.Dependencies)
                     {
-                        occurrences.Add(new DeclaredElementOccurrence(dependency));
+                        occurrences.Add(new DeclaredElementOccurrence(module.Class));
                     }
                 }
             }

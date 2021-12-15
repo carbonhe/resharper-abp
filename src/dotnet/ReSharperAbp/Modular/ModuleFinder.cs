@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
@@ -47,55 +49,102 @@ namespace ReSharperAbp.Modular
         }
 
 
-        [CanBeNull, ItemNotNull]
-        public IEnumerable<IClass> FindDirectDependencies([NotNull] IClass clazz)
+        private static void SortAttributeDependenciesRecursively(
+            ModuleInfo current,
+            Stack<ModuleInfo> visiting,
+            ICollection<ModuleInfo> visited)
         {
-            _checker.AssertIsAbpModule(clazz);
-            var values = clazz
-                .GetAttributeInstances(new ClrTypeName(_checker.BuiltinTypes.DependsOnAttribute), AttributesSource.All)
-                .SingleOrDefault()?.PositionParameter(0).ArrayValue;
-
-            if (values != null)
+            if (visiting.Contains(current))
             {
-                foreach (var value in values)
+                var circle = new List<ModuleInfo>();
+
+                foreach (var module in visiting)
                 {
-                    var dependency = value.TypeValue.GetClassType();
-                    if (dependency != null
-                        && dependency.GetFullClrName() == clazz.GetFullClrName()
-                        && _checker.IsAbpModule(dependency))
+                    circle.Push(module);
+                    if (module.Equals(current))
                     {
-                        yield return dependency;
+                        break;
                     }
                 }
+
+                circle.Insert(0, current);
+                circle.Reverse();
+
+
+                throw new ModuleCyclicDependencyException(circle);
             }
+
+            visiting.Push(current);
+
+
+            var modules = current.GetDependsOnAttributeDependencies();
+
+            if (modules != null)
+            {
+                foreach (var module in modules)
+                {
+                    SortAttributeDependenciesRecursively(module, visiting, visited);
+                }
+            }
+
+            visited.Add(visiting.Pop());
         }
 
-        [CanBeNull, ItemNotNull]
-        public IEnumerable<IClass> FindAllDependencies([NotNull] IClass clazz)
+
+        [NotNull]
+        public DependencyResult FindDependencies([NotNull] IClass clazz)
         {
-            var queue = new Queue<IClass>();
-            var directDependencies = FindDirectDependencies(clazz);
-            if (directDependencies != null)
+            var module = ModuleInfo.Create(clazz, _checker);
+
+            var visiting = new Stack<ModuleInfo>();
+            var visited = new List<ModuleInfo>();
+
+            DependencyResult result;
+
+            try
             {
-                foreach (var dependency in directDependencies)
-                {
-                    queue.Enqueue(dependency);
-                }
+                SortAttributeDependenciesRecursively(module, visiting, visited);
+                result = DependencyResult.ForDependencies(visited);
+            }
+            catch (ModuleCyclicDependencyException exception)
+            {
+                result = DependencyResult.ForCircularSegments(exception.Segments);
             }
 
-            while (!queue.IsEmpty())
-            {
-                var dependency = queue.Dequeue();
-                var dependencies = FindDirectDependencies(dependency);
-                if (dependencies != null)
-                {
-                    foreach (var d in dependencies)
-                    {
-                        queue.Enqueue(d);
-                    }
-                }
+            return result;
+        }
 
-                yield return dependency;
+
+        public class DependencyResult
+        {
+            public bool HasCircularDependency { get; private init; }
+
+            [CanBeNull]
+            public IList<ModuleInfo> CircularSegments { get; private init; }
+
+            [CanBeNull]
+            public ICollection<ModuleInfo> Dependencies { get; private init; }
+
+            private DependencyResult()
+            {
+            }
+
+            public static DependencyResult ForDependencies(ICollection<ModuleInfo> dependencies)
+            {
+                return new DependencyResult
+                {
+                    Dependencies = dependencies,
+                    HasCircularDependency = false
+                };
+            }
+
+            public static DependencyResult ForCircularSegments(IList<ModuleInfo> circularPaths)
+            {
+                return new DependencyResult
+                {
+                    CircularSegments = circularPaths,
+                    HasCircularDependency = true
+                };
             }
         }
     }
