@@ -1,4 +1,4 @@
-public class SampleTest
+public class ModularProblemAnalyzer
 {
     public void Method()
     {

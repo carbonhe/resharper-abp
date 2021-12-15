@@ -20,7 +20,7 @@ namespace ReSharperAbp.Tests
         }
 
         [Test]
-        public void TestSampleTest()
+        public void TestModularProblemAnalyzer()
         {
             DoNamedTest2();
         }
