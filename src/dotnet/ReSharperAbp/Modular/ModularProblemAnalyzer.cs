@@ -34,7 +34,9 @@ namespace ReSharperAbp.Modular
             IHighlightingConsumer consumer)
         {
             var checker = declaration.GetChecker();
-            if (declaration.DeclaredElement != null & checker != null)
+            if (declaration.DeclaredElement != null
+                && checker != null
+                && checker.IsAbpModule(declaration.DeclaredElement))
             {
                 var result = checker.ModuleFinder.FindDependencies(declaration.DeclaredElement);
 
@@ -61,7 +63,9 @@ namespace ReSharperAbp.Modular
         private static void ProcessIncorrectDependency(ITypeofExpression element,
             IHighlightingConsumer consumer)
         {
-            if (!element.TypeName.IsValid() || !element.GetParentOfType<IAttribute>().IsDependsOnAttribute())
+            if (element.TypeName == null
+                || !element.TypeName.IsValid()
+                || !element.GetParentOfType<IAttribute>().IsDependsOnAttribute())
             {
                 return;
             }
