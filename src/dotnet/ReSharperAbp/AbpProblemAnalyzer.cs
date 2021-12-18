@@ -12,5 +12,13 @@ namespace ReSharperAbp
         {
             return file.Language.Name == CSharpLanguage.Name && file.GetProject()?.GetData(AbpChecker.Key) != null;
         }
+
+        protected sealed override void Run(T element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        {
+            Run(element, data, consumer, element.GetChecker()!);
+        }
+
+        protected abstract void Run(T element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer,
+            AbpChecker checker);
     }
 }
