@@ -17,28 +17,22 @@ namespace ReSharperAbp.Modular
         CSharpLanguage.Name,
         OverlapResolve = OverlapResolveKind.NONE,
         OverloadResolvePriority = 0)]
-    public class NotAnAbpModuleError : IHighlighting
+    public class DependsOnAttributeUsageError : IHighlighting
     {
-        private const string SeverityId = "Not an Abp module";
-        private readonly ITypeofExpression _exp;
+        private const string SeverityId = "DependsOn attribute usage error";
 
+        private readonly IAttribute _attribute;
 
-        public NotAnAbpModuleError(ITypeofExpression exp)
+        public DependsOnAttributeUsageError(IAttribute attribute)
         {
-            _exp = exp;
+            _attribute = attribute;
         }
 
-        public bool IsValid() => _exp == null || _exp.IsValid();
+        public bool IsValid() => _attribute == null || _attribute.IsValid();
 
+        public DocumentRange CalculateRange() => _attribute.GetHighlightingRange();
 
-        public DocumentRange CalculateRange()
-        {
-            return _exp.TypeName.GetHighlightingRange();
-        }
-
-        public string ToolTip =>
-            $"{_exp.ArgumentType} is not an Abp module";
-
+        public string ToolTip => "DependsOn attribute can only be used on Abp module";
         public string ErrorStripeToolTip => ToolTip;
     }
 }

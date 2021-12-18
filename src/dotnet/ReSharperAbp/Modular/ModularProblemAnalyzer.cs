@@ -1,15 +1,17 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 
 namespace ReSharperAbp.Modular
 {
     [ElementProblemAnalyzer(
-        typeof(ITypeofExpression), typeof(IAttribute), typeof(IClassDeclaration),
+        typeof(IAttribute), typeof(IClassDeclaration),
         HighlightingTypes = new[]
-            { typeof(NotAnAbpModuleError), typeof(InvalidDependsOnError), typeof(CyclicDependencyError) })]
+        {
+            typeof(ReferenceNonAbpModuleTypeError), typeof(DependsOnAttributeUsageError), typeof(CyclicDependencyError)
+        })]
     public class ModularProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
     {
         protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data,
@@ -17,20 +19,17 @@ namespace ReSharperAbp.Modular
         {
             switch (element)
             {
-                case ITypeofExpression typeofExpression:
-                    ProcessIncorrectDependency(typeofExpression, consumer);
-                    break;
                 case IAttribute attribute:
-                    ProcessInvalidDependsOn(attribute, consumer);
+                    AnalyzeDependsOnAttribute(attribute, consumer);
                     break;
                 case IClassDeclaration classDeclaration:
-                    ProcessCyclicDependency(classDeclaration, consumer);
+                    AnalyzeCyclicDependency(classDeclaration, consumer);
                     break;
             }
         }
 
 
-        private static void ProcessCyclicDependency([NotNull] IClassDeclaration declaration,
+        private static void AnalyzeCyclicDependency([NotNull] IClassDeclaration declaration,
             IHighlightingConsumer consumer)
         {
             var checker = declaration.GetChecker();
@@ -48,34 +47,29 @@ namespace ReSharperAbp.Modular
             }
         }
 
-        private static void ProcessInvalidDependsOn(IAttribute attribute, IHighlightingConsumer consumer)
+        private static void AnalyzeDependsOnAttribute(IAttribute attribute, IHighlightingConsumer consumer)
         {
             var clazz = attribute.GetParentOfType<IClassDeclaration>()?.DeclaredElement;
-            if (clazz != null
-                &&
-                attribute.IsDependsOnAttribute()
-                && !attribute.GetChecker().IsAbpModule(clazz))
-            {
-                consumer.AddHighlighting(new InvalidDependsOnError(attribute));
-            }
-        }
-
-        private static void ProcessIncorrectDependency(ITypeofExpression element,
-            IHighlightingConsumer consumer)
-        {
-            if (element.TypeName == null
-                || !element.TypeName.IsValid()
-                || !element.GetParentOfType<IAttribute>().IsDependsOnAttribute())
+            if (!attribute.IsDependsOnAttribute() || clazz == null)
             {
                 return;
             }
 
-
-            if (element.TypeName is not IUserTypeUsage usage
-                || usage.ScalarTypeName.Reference.Resolve().Result.DeclaredElement is not IClass clazz
-                || !element.GetChecker().IsAbpModule(clazz))
+            var checker = attribute.GetChecker()!;
+            if (!checker.IsAbpModule(clazz))
             {
-                consumer.AddHighlighting(new NotAnAbpModuleError(element));
+                consumer.AddHighlighting(new DependsOnAttributeUsageError(attribute));
+            }
+
+            foreach (var argument in attribute.Arguments)
+            {
+                if (argument.Expression is ITypeofExpression expression)
+                {
+                    if (!checker.IsAbpModule(expression.ArgumentType.GetClassType()))
+                    {
+                        consumer.AddHighlighting(new ReferenceNonAbpModuleTypeError(expression.TypeName));
+                    }
+                }
             }
         }
     }

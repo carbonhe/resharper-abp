@@ -16,7 +16,7 @@ namespace ReSharperAbp.Tests
             IPsiSourceFile sourceFile,
             IContextBoundSettingsStore settingsStore)
         {
-            return highlighting is NotAnAbpModuleError;
+            return highlighting is ReferenceNonAbpModuleTypeError;
         }
 
         [Test]

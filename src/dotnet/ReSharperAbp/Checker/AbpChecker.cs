@@ -24,9 +24,9 @@ namespace ReSharperAbp.Checker
             ModuleFinder = new ModuleFinder(this);
         }
 
-        public virtual bool IsAbpModule([NotNull] IClass clazz)
+        public virtual bool IsAbpModule([CanBeNull] IClass clazz)
         {
-            return clazz.GetAllSuperClasses().Any(c => c.GetClrName().FullName == BuiltinTypes.ModuleClass);
+            return clazz != null && clazz.GetAllSuperClasses().Any(c => c.GetClrName().FullName == BuiltinTypes.ModuleClass);
         }
 
         public virtual bool IsDependsOn([NotNull] IClass source, [NotNull] IClass target)

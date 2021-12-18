@@ -7,6 +7,7 @@ using JetBrains.Lifetimes;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Assemblies.Impl;
+using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ProjectModel.Tasks;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Util;

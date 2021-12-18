@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -8,21 +9,29 @@ namespace ReSharperAbp
 {
     public static class TreeNodeExtensions
     {
+        #region TreeNode
+
+        [CanBeNull]
         public static AbpChecker GetChecker(this ITreeNode node)
         {
             return node.GetProject()?.GetData(AbpChecker.Key);
         }
 
-        public static bool IsAbpInstalled(this ITreeNode node)
-        {
-            return node.GetChecker() != null;
-        }
+        #endregion
 
+
+        #region Attribute
 
         public static bool IsDependsOnAttribute(this IAttribute attribute)
         {
-            return attribute.TypeReference?.Resolve().Result.DeclaredElement is IClass clazz &&
-                   clazz.GetFullClrName() == attribute.GetChecker().BuiltinTypes.DependsOnAttribute;
+            var checker = attribute.GetChecker();
+
+            var reference = attribute.TypeReference;
+
+            return checker != null && reference?.Resolve().Result.DeclaredElement is IClass clazz &&
+                   clazz.GetFullClrName() == checker.BuiltinTypes.DependsOnAttribute;
         }
+
+        #endregion
     }
 }
