@@ -1,4 +1,5 @@
 using JetBrains.TextControl.DocumentMarkup;
+using ReSharperAbp.Modular;
 
 namespace ReSharperAbp
 {

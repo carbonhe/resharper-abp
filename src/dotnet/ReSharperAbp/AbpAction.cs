@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
@@ -18,8 +17,6 @@ namespace ReSharperAbp
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
             var element = context.GetSelectedTreeNode<IClassDeclaration>();
-            var modules = element.GetChecker().ModuleFinder.FindAllAbpModules();
-            Console.WriteLine(modules);
         }
     }
 }

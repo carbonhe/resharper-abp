@@ -6,10 +6,11 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 using ReSharperAbp.Checker;
+using ReSharperAbp.Util;
 
 namespace ReSharperAbp.Modular
 {
-    public class ModuleInfo
+    public class ModuleInfo : ITopologyNode<ModuleInfo>
     {
         private static readonly ConcurrentDictionary<IClass, ModuleInfo> CachedModules = new();
 
@@ -19,8 +20,8 @@ namespace ReSharperAbp.Modular
 
         public static ModuleInfo Create([NotNull] IClass clazz, [NotNull] AbpChecker checker)
         {
+            checker.AssertIsAbpModule(clazz);
             CachedModules.TryGetValue(clazz, out var module);
-
             module ??= new ModuleInfo(clazz, checker);
             CachedModules[clazz] = module;
             return module;
@@ -45,8 +46,9 @@ namespace ReSharperAbp.Modular
         }
 
 
-        [CanBeNull, ItemNotNull]
-        public IEnumerable<ModuleInfo> GetDependsOnAttributeDependencies()
+        public IEnumerable<ModuleInfo> GetIncomingNodes() => null;
+
+        public IEnumerable<ModuleInfo> GetOutgoingNodes()
         {
             var attributes = Class.GetAttributeInstances(new ClrTypeName(_checker.BuiltinTypes.DependsOnAttribute),
                 AttributesSource.All);

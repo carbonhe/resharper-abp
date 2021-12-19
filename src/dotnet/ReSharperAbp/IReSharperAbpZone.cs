@@ -11,7 +11,7 @@ namespace ReSharperAbp
     [ZoneDefinitionConfigurableFeature("Title", "Description", IsInProductSection: false)]
     public interface IReSharperAbpZone : IPsiLanguageZone,
         IRequire<ILanguageCSharpZone>,
-        IRequire<DaemonZone>, IRequire<IRdActionsBackendZone> , IRequire<IRdActionsFrontendZone>
+        IRequire<DaemonZone>, IRequire<IRdActionsBackendZone>, IRequire<IRdActionsFrontendZone>
     {
     }
 }

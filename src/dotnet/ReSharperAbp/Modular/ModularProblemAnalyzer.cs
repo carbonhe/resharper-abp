@@ -1,10 +1,13 @@
-using System.Runtime.CompilerServices;
+using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
+using JetBrains.Util;
 using ReSharperAbp.Checker;
+using ReSharperAbp.Extension;
+using ReSharperAbp.Util;
 
 namespace ReSharperAbp.Modular
 {
@@ -38,12 +41,16 @@ namespace ReSharperAbp.Modular
             if (declaration.DeclaredElement != null
                 && checker.IsAbpModule(declaration.DeclaredElement))
             {
-                var result = checker.ModuleFinder.FindDependencies(declaration.DeclaredElement);
-
-                if (result.HasCircularDependency)
+                try
                 {
-                    consumer.AddHighlighting(new CyclicDependencyError(declaration,
-                        ModuleCyclicDependencyException.CreateDetailsMessage(result.CircularSegments)));
+                    checker.ToModuleInfo(declaration.DeclaredElement).GetAllOutgoingNodes();
+                }
+                catch (CyclicDependencyException<ModuleInfo> exception)
+                {
+                    var message =
+                        $"Abp Module Cyclic Dependency: {exception.Segments.Select(m => m.Class.GetFullClrName()).Join(" -> ")}";
+
+                    consumer.AddHighlighting(new CyclicDependencyError(declaration, message));
                 }
             }
         }

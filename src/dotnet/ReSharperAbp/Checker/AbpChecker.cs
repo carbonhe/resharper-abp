@@ -16,11 +16,9 @@ namespace ReSharperAbp.Checker
 
         public abstract IAbpBuiltinTypes BuiltinTypes { get; }
 
-        public ModuleFinder ModuleFinder { get; }
 
         protected AbpChecker()
         {
-            ModuleFinder = new ModuleFinder(this);
         }
 
         public virtual bool IsAbpModule([CanBeNull] IClass clazz)
@@ -29,6 +27,11 @@ namespace ReSharperAbp.Checker
                    && clazz.TypeParameters.IsEmpty()
                    && clazz.GetAllSuperClasses()
                        .Any(c => c.GetClrName().FullName == BuiltinTypes.ModuleClass);
+        }
+
+        public virtual ModuleInfo ToModuleInfo(IClass clazz)
+        {
+            return ModuleInfo.Create(clazz, this);
         }
 
         public virtual bool IsDependsOn([NotNull] IClass source, [NotNull] IClass target)

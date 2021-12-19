@@ -1,5 +1,3 @@
-using JetBrains.ReSharper.Psi;
-
 namespace ReSharperAbp.Checker
 {
     public class VNextAbpChecker : AbpChecker

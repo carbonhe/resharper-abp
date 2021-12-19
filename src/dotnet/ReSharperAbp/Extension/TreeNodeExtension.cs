@@ -5,22 +5,16 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.RiderTutorials.Utils;
 using ReSharperAbp.Checker;
 
-namespace ReSharperAbp
+namespace ReSharperAbp.Extension
 {
-    public static class TreeNodeExtensions
+    public static class TreeNodeExtension
     {
-        #region TreeNode
-
         [CanBeNull]
         public static AbpChecker GetChecker(this ITreeNode node)
         {
             return node.GetProject()?.GetData(AbpChecker.Key);
         }
 
-        #endregion
-
-
-        #region Attribute
 
         public static bool IsDependsOnAttribute(this IAttribute attribute)
         {
@@ -31,7 +25,5 @@ namespace ReSharperAbp
             return checker != null && reference?.Resolve().Result.DeclaredElement is IClass clazz &&
                    clazz.GetFullClrName() == checker.BuiltinTypes.DependsOnAttribute;
         }
-
-        #endregion
     }
 }

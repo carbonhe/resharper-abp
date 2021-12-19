@@ -1,7 +1,3 @@
-using System.Linq;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Util;
-
 namespace ReSharperAbp.Checker
 {
     public class LegacyAbpChecker : AbpChecker
