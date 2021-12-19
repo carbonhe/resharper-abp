@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.Impl;
-using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
@@ -26,7 +25,10 @@ namespace ReSharperAbp.Checker
 
         public virtual bool IsAbpModule([CanBeNull] IClass clazz)
         {
-            return clazz != null && clazz.GetAllSuperClasses().Any(c => c.GetClrName().FullName == BuiltinTypes.ModuleClass);
+            return clazz is { IsAbstract: false }
+                   && clazz.TypeParameters.IsEmpty()
+                   && clazz.GetAllSuperClasses()
+                       .Any(c => c.GetClrName().FullName == BuiltinTypes.ModuleClass);
         }
 
         public virtual bool IsDependsOn([NotNull] IClass source, [NotNull] IClass target)
