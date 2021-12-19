@@ -32,12 +32,12 @@ namespace ReSharperAbp.Extension
                     {
                         break;
                     }
-
-                    segments.Insert(0, node);
-                    segments.Reverse();
-
-                    throw new CyclicDependencyException<TNode>(segments);
                 }
+
+                segments.Insert(0, node);
+                segments.Reverse();
+
+                throw new CyclicDependencyException<TNode>(segments);
             }
 
             visiting.Push(node);

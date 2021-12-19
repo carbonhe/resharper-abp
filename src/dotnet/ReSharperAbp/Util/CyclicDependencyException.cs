@@ -11,7 +11,7 @@ namespace ReSharperAbp.Util
 
         public CyclicDependencyException([NotNull] [ItemNotNull] IList<T> segments)
         {
-            if (segments == null || segments.Count < 2 || segments.First().Equals(segments.Last()))
+            if (segments == null || segments.Count < 2 || !segments.First().Equals(segments.Last()))
             {
                 throw new InvalidOperationException("No cyclic dependencies found");
             }
