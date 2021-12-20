@@ -3,16 +3,16 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.RiderTutorials.Utils;
-using ReSharperAbp.Checker;
+using ReSharperAbp.Abstraction;
 
 namespace ReSharperAbp.Extension
 {
     public static class TreeNodeExtension
     {
         [CanBeNull]
-        public static AbpChecker GetChecker(this ITreeNode node)
+        public static IAbp GetChecker(this ITreeNode node)
         {
-            return node.GetProject()?.GetData(AbpChecker.Key);
+            return node.GetProject()?.GetData(AbpFrameworkInitializer.AbpKey);
         }
 
 
@@ -23,7 +23,7 @@ namespace ReSharperAbp.Extension
             var reference = attribute.TypeReference;
 
             return checker != null && reference?.Resolve().Result.DeclaredElement is IClass clazz &&
-                   clazz.GetFullClrName() == checker.BuiltinTypes.DependsOnAttribute;
+                   clazz.GetFullClrName() == checker.Module.DependsOnAttribute;
         }
     }
 }

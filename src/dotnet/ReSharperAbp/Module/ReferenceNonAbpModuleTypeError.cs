@@ -2,7 +2,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReSharperAbp.Modular
+namespace ReSharperAbp.Module
 {
     [StaticSeverityHighlighting(Severity.ERROR, typeof(AbpHighlightingGroup), OverlapResolve = OverlapResolveKind.ERROR,
         ToolTipFormatString = Message)]

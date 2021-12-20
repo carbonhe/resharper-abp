@@ -10,17 +10,21 @@ using JetBrains.ProjectModel.Assemblies.Impl;
 using JetBrains.ProjectModel.Tasks;
 using JetBrains.Util;
 using JetBrains.Util.Reflection;
-using ReSharperAbp.Checker;
+using ReSharperAbp.Abstraction;
+using ReSharperAbp.Legacy;
+using ReSharperAbp.VNext;
 
 namespace ReSharperAbp
 {
     [SolutionComponent]
     public class AbpFrameworkInitializer : IChangeProvider
     {
+        public static readonly Key<IAbp> AbpKey = new(nameof(IAbp));
+
         private static readonly ICollection<AssemblyNameInfo> AbpAssemblyNames = new HashSet<AssemblyNameInfo>
         {
-            AssemblyNameInfoFactory.Create(VNextAbpChecker.PackageName),
-            AssemblyNameInfoFactory.Create(LegacyAbpChecker.PackageName),
+            AssemblyNameInfoFactory.Create(VNextAbp.PackageName),
+            AssemblyNameInfoFactory.Create(LegacyAbp.PackageName),
         };
 
         private readonly ISolution _solution;
@@ -33,7 +37,7 @@ namespace ReSharperAbp
         public static ISolution Solution { get; private set; }
 
 
-        public bool HasReferenceAbp => _solution.GetTopLevelProjects().Any(p => p.GetData(AbpChecker.Key) != null);
+        public bool HasReferenceAbp => _solution.GetTopLevelProjects().Any(p => p.GetData(AbpKey) != null);
 
 
         public AbpFrameworkInitializer(
@@ -72,13 +76,13 @@ namespace ReSharperAbp
 
             var moduleNames = project.GetModuleReferences(frameworkId).Select(r => r.Name).ToArray();
 
-            if (moduleNames.Contains(VNextAbpChecker.PackageName))
+            if (moduleNames.Contains(VNextAbp.PackageName))
             {
-                project.PutData(AbpChecker.Key, VNextAbpChecker.Instance);
+                project.PutData(AbpKey, VNextAbp.Instance);
             }
-            else if (moduleNames.Contains(LegacyAbpChecker.PackageName))
+            else if (moduleNames.Contains(LegacyAbp.PackageName))
             {
-                project.PutData(AbpChecker.Key, LegacyAbpChecker.Instance);
+                project.PutData(AbpKey, LegacyAbp.Instance);
             }
         }
 

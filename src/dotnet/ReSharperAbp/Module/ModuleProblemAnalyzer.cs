@@ -5,11 +5,11 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
-using ReSharperAbp.Checker;
+using ReSharperAbp.Abstraction;
 using ReSharperAbp.Extension;
 using ReSharperAbp.Util;
 
-namespace ReSharperAbp.Modular
+namespace ReSharperAbp.Module
 {
     [ElementProblemAnalyzer(
         typeof(IAttribute), typeof(IClassDeclaration),
@@ -17,10 +17,10 @@ namespace ReSharperAbp.Modular
         {
             typeof(ReferenceNonAbpModuleTypeError), typeof(DependsOnAttributeUsageError), typeof(CyclicDependencyError)
         })]
-    public sealed class ModularProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
+    public sealed class ModuleProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
     {
         protected override void Run([NotNull] ICSharpTreeNode element, [NotNull] ElementProblemAnalyzerData data,
-            IHighlightingConsumer consumer, [NotNull] AbpChecker checker)
+            IHighlightingConsumer consumer, [NotNull] IAbp checker)
         {
             switch (element)
             {
@@ -36,14 +36,14 @@ namespace ReSharperAbp.Modular
 
 
         private static void AnalyzeCyclicDependency([NotNull] IClassDeclaration declaration,
-            IHighlightingConsumer consumer, AbpChecker checker)
+            IHighlightingConsumer consumer, IAbp checker)
         {
             if (declaration.DeclaredElement != null
-                && checker.IsAbpModule(declaration.DeclaredElement))
+                && checker.Module.IsAbpModule(declaration.DeclaredElement))
             {
                 try
                 {
-                    checker.ToModuleInfo(declaration.DeclaredElement).GetAllOutgoingNodes();
+                    checker.Module.CreateModuleInfo(declaration.DeclaredElement).GetAllOutgoingNodes();
                 }
                 catch (CyclicDependencyException<ModuleInfo> exception)
                 {
@@ -56,16 +56,16 @@ namespace ReSharperAbp.Modular
         }
 
         private static void AnalyzeModuleGutterIcon([NotNull] IClassDeclaration declaration,
-            IHighlightingConsumer consumer, AbpChecker checker)
+            IHighlightingConsumer consumer, IAbp checker)
         {
-            if (checker.IsAbpModule(declaration.DeclaredElement))
+            if (checker.Module.IsAbpModule(declaration.DeclaredElement))
             {
                 consumer.AddHighlighting(new ModuleIndicator(declaration));
             }
         }
 
         private static void AnalyzeDependsOnAttribute(IAttribute attribute, IHighlightingConsumer consumer,
-            AbpChecker checker)
+            IAbp checker)
         {
             var clazz = attribute.GetParentOfType<IClassDeclaration>()?.DeclaredElement;
             if (!attribute.IsDependsOnAttribute() || clazz == null)
@@ -73,7 +73,7 @@ namespace ReSharperAbp.Modular
                 return;
             }
 
-            if (!checker.IsAbpModule(clazz))
+            if (!checker.Module.IsAbpModule(clazz))
             {
                 consumer.AddHighlighting(new DependsOnAttributeUsageError(attribute));
             }
@@ -82,7 +82,7 @@ namespace ReSharperAbp.Modular
             {
                 if (argument.Expression is ITypeofExpression expression)
                 {
-                    if (!checker.IsAbpModule(expression.ArgumentType.GetClassType()))
+                    if (!checker.Module.IsAbpModule(expression.ArgumentType.GetClassType()))
                     {
                         consumer.AddHighlighting(new ReferenceNonAbpModuleTypeError(expression.TypeName));
                     }

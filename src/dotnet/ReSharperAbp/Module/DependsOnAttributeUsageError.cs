@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReSharperAbp.Modular
+namespace ReSharperAbp.Module
 {
     [RegisterConfigurableSeverity(
         SeverityId,
@@ -17,22 +17,22 @@ namespace ReSharperAbp.Modular
         CSharpLanguage.Name,
         OverlapResolve = OverlapResolveKind.NONE,
         OverloadResolvePriority = 0)]
-    public class CyclicDependencyError : IHighlighting
+    public class DependsOnAttributeUsageError : IHighlighting
     {
-        private readonly IClassDeclaration _declaration;
+        private const string SeverityId = "DependsOn attribute usage error";
 
-        public CyclicDependencyError(IClassDeclaration declaration, string toolTip)
+        private readonly IAttribute _attribute;
+
+        public DependsOnAttributeUsageError(IAttribute attribute)
         {
-            ToolTip = toolTip;
-            _declaration = declaration;
+            _attribute = attribute;
         }
 
-        private const string SeverityId = "Module cyclic dependency";
+        public bool IsValid() => _attribute == null || _attribute.IsValid();
 
-        public bool IsValid() => _declaration == null || _declaration.IsValid();
+        public DocumentRange CalculateRange() => _attribute.GetHighlightingRange();
 
-        public DocumentRange CalculateRange() => _declaration.NameIdentifier.GetHighlightingRange();
-        public string ToolTip { get; }
+        public string ToolTip => "DependsOn attribute can only be used on Abp module";
         public string ErrorStripeToolTip => ToolTip;
     }
 }
