@@ -14,7 +14,7 @@ namespace ReSharperAbp.Modular
         ToolTipFormatString = Message)]
     public class ModuleIndicator : IHighlighting
     {
-        private const string Message = "Abp Module({0})";
+        private const string Message = "Abp Module";
 
         private readonly IClassDeclaration _classDeclaration;
 
@@ -28,7 +28,7 @@ namespace ReSharperAbp.Modular
 
         public DocumentRange CalculateRange() => _classDeclaration.NameIdentifier.GetHighlightingRange();
 
-        public string ToolTip => string.Format(Message, _classDeclaration.NameIdentifier.Name);
+        public string ToolTip => Message;
         public string ErrorStripeToolTip => ToolTip;
 
         public class IconGutterMark : IconGutterMarkType
