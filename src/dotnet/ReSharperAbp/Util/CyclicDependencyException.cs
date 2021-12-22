@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace ReSharperAbp.Util
@@ -11,11 +10,6 @@ namespace ReSharperAbp.Util
 
         public CyclicDependencyException([NotNull] [ItemNotNull] IList<T> segments)
         {
-            if (segments == null || segments.Count < 2 || !segments.First().Equals(segments.Last()))
-            {
-                throw new InvalidOperationException("No cyclic dependencies found");
-            }
-
             Segments = segments;
         }
     }

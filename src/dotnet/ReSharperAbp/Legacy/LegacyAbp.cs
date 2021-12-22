@@ -23,8 +23,8 @@ namespace ReSharperAbp.Legacy
         public static class PredefinedType
         {
             public static readonly IClrTypeName AbpModule = new ClrTypeName("Abp.Modules.AbpModule");
-            public static readonly IClrTypeName ITransientDependency = new ClrTypeName("Abp.Depencency.ITransientDependency");
-            public static readonly IClrTypeName ISingletonDependency = new ClrTypeName("Abp.Depencency.ISingletonDependency");
+            public static readonly IClrTypeName ITransientDependency = new ClrTypeName("Abp.Dependency.ITransientDependency");
+            public static readonly IClrTypeName ISingletonDependency = new ClrTypeName("Abp.Dependency.ISingletonDependency");
         }
     }
 }
