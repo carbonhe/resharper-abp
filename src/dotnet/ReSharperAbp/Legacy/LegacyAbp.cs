@@ -1,3 +1,5 @@
+using JetBrains.Metadata.Reader.API;
+using JetBrains.Metadata.Reader.Impl;
 using ReSharperAbp.Abstraction;
 
 namespace ReSharperAbp.Legacy
@@ -14,6 +16,15 @@ namespace ReSharperAbp.Legacy
 
         public IModule Module { get; } = new LegacyModule();
 
-        public IDependency Dependency { get; }
+        public IDependency Dependency { get; } = new LegacyDependency();
+
+
+        // ReSharper disable InconsistentNaming
+        public static class PredefinedType
+        {
+            public static readonly IClrTypeName AbpModule = new ClrTypeName("Abp.Modules.AbpModule");
+            public static readonly IClrTypeName ITransientDependency = new ClrTypeName("Abp.Depencency.ITransientDependency");
+            public static readonly IClrTypeName ISingletonDependency = new ClrTypeName("Abp.Depencency.ISingletonDependency");
+        }
     }
 }

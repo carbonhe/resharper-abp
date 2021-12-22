@@ -21,12 +21,12 @@ namespace ReSharperAbp.Legacy
             return clazz is { IsAbstract: false }
                    && clazz.TypeParameters.IsEmpty()
                    && clazz.GetAllSuperClasses()
-                       .Any(c => c.GetClrName().FullName == "Abp.Modules.AbpModule");
+                       .Any(c => c.GetClrName().Equals(LegacyAbp.PredefinedType.AbpModule));
         }
 
         public ModuleInfo CreateModuleInfo(IClass clazz)
         {
-            return ModuleInfo.Create(clazz, this);
+            return new ModuleInfo(clazz, this);
         }
 
         public IEnumerable<IClass> GetModuleDependencies(IClass clazz)
