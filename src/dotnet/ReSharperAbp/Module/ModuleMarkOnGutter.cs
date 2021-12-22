@@ -12,13 +12,13 @@ namespace ReSharperAbp.Module
         AttributeId = AbpHighlightingAttributeIds.AbpModuleGutterIconAttribute,
         OverlapResolve = OverlapResolveKind.NONE,
         ToolTipFormatString = Message)]
-    public class ModuleIndicator : IHighlighting
+    public class ModuleMarkOnGutter : IHighlighting
     {
         private const string Message = "Abp Module";
 
         private readonly IClassDeclaration _classDeclaration;
 
-        public ModuleIndicator(IClassDeclaration classDeclaration)
+        public ModuleMarkOnGutter(IClassDeclaration classDeclaration)
         {
             _classDeclaration = classDeclaration;
         }

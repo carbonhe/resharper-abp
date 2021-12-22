@@ -60,7 +60,7 @@ namespace ReSharperAbp.Module
         {
             if (checker.Module.IsAbpModule(declaration.DeclaredElement))
             {
-                consumer.AddHighlighting(new ModuleIndicator(declaration));
+                consumer.AddHighlighting(new ModuleMarkOnGutter(declaration));
             }
         }
 
