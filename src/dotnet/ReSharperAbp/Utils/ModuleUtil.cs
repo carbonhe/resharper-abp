@@ -23,7 +23,7 @@ namespace ReSharperAbp.Utils
         public static IEnumerable<IClass> GetDirectDependencies(IClass clazz)
         {
             var values = clazz.GetAttributeInstances(KnownTypes.DependsOnAttribute, AttributesSource.All)
-                .SingleOrDefault()?.PositionParameter(0).ArrayValue;
+                .FirstOrDefault()?.PositionParameter(0).ArrayValue;
 
             if (values != null)
             {
