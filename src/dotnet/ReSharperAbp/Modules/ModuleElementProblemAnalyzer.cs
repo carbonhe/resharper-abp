@@ -6,20 +6,16 @@ using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
 using ReSharperAbp.Abstraction;
+using ReSharperAbp.Analyzers;
 using ReSharperAbp.Extension;
+using ReSharperAbp.Highlightings;
 using ReSharperAbp.Util;
 
 namespace ReSharperAbp.Module
 {
-    [ElementProblemAnalyzer(
-        typeof(IAttribute), typeof(IClassDeclaration),
-        HighlightingTypes = new[]
-        {
-            typeof(ReferenceNonAbpModuleTypeError), typeof(DependsOnAttributeUsageError), typeof(CyclicDependencyError)
-        })]
-    public sealed class ModuleProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
+    public sealed class ModuleElementProblemAnalyzer
     {
-        protected override void Run([NotNull] ICSharpTreeNode element, [NotNull] ElementProblemAnalyzerData data,
+        protected void Run([NotNull] ICSharpTreeNode element, [NotNull] ElementProblemAnalyzerData data,
             IHighlightingConsumer consumer, [NotNull] IAbp checker)
         {
             switch (element)
@@ -68,10 +64,7 @@ namespace ReSharperAbp.Module
             IAbp checker)
         {
             var clazz = attribute.GetParentOfType<IClassDeclaration>()?.DeclaredElement;
-            if (!attribute.IsDependsOnAttribute() || clazz == null)
-            {
-                return;
-            }
+
 
             if (!checker.Module.IsAbpModule(clazz))
             {
@@ -84,7 +77,7 @@ namespace ReSharperAbp.Module
                 {
                     if (!checker.Module.IsAbpModule(expression.ArgumentType.GetClassType()))
                     {
-                        consumer.AddHighlighting(new ReferenceNonAbpModuleTypeError(expression.TypeName));
+                        consumer.AddHighlighting(new InvalidModuleDependencyError(expression.TypeName));
                     }
                 }
             }

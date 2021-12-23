@@ -1,6 +1,6 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
-namespace ReSharperAbp
+namespace ReSharperAbp.Highlightings
 {
     [RegisterConfigurableHighlightingsGroup(Id, Title)]
     [RegisterStaticHighlightingsGroup(Title, true)]

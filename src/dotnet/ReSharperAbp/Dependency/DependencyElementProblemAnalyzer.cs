@@ -1,13 +1,13 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReSharperAbp.Abstraction;
+using ReSharperAbp.Analyzers;
 
 namespace ReSharperAbp.Dependency
 {
-    [ElementProblemAnalyzer(typeof(IClassDeclaration))]
-    public sealed class DependencyProblemAnalyzer : AbpProblemAnalyzer<ICSharpTreeNode>
+    public sealed class DependencyElementProblemAnalyzer
     {
-        protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data,
+        protected  void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data,
             IHighlightingConsumer consumer, IAbp checker)
         {
             switch (element)

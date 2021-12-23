@@ -1,8 +1,7 @@
 using JetBrains.TextControl.DocumentMarkup;
 using ReSharperAbp.Dependency;
-using ReSharperAbp.Module;
 
-namespace ReSharperAbp
+namespace ReSharperAbp.Highlightings
 {
     [RegisterHighlighter(AbpModuleGutterIconAttribute, EffectType = EffectType.GUTTER_MARK,
         GutterMarkType = typeof(ModuleMarkOnGutter.IconGutterMark))]

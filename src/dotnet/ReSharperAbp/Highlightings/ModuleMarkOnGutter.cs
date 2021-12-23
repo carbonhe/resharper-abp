@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
 
-namespace ReSharperAbp.Module
+namespace ReSharperAbp.Highlightings
 {
     [StaticSeverityHighlighting(Severity.INFO, typeof(AbpHighlightingGroup),
         AttributeId = AbpHighlightingAttributeIds.AbpModuleGutterIconAttribute,

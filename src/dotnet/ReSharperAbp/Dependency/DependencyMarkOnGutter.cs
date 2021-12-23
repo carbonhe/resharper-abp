@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
+using ReSharperAbp.Highlightings;
 
 namespace ReSharperAbp.Dependency
 {
