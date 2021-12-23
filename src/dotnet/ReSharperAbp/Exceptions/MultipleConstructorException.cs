@@ -2,7 +2,7 @@ using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.RiderTutorials.Utils;
 
-namespace ReSharperAbp.Dependency
+namespace ReSharperAbp.Exceptions
 {
     public class MultipleConstructorException : Exception
     {

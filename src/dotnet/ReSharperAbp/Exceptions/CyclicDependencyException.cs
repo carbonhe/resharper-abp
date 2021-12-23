@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ReSharperAbp.Util
+namespace ReSharperAbp.Exceptions
 {
     public class CyclicDependencyException<T> : Exception
     {

@@ -2,9 +2,8 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReSharperAbp.Highlightings;
 
-namespace ReSharperAbp.Module
+namespace ReSharperAbp.Highlightings
 {
     [RegisterConfigurableSeverity(
         SeverityId,
@@ -18,11 +17,11 @@ namespace ReSharperAbp.Module
         CSharpLanguage.Name,
         OverlapResolve = OverlapResolveKind.NONE,
         OverloadResolvePriority = 0)]
-    public class CyclicDependencyError : IHighlighting
+    public class ModuleCyclicDependencyError : IHighlighting
     {
         private readonly IClassDeclaration _declaration;
 
-        public CyclicDependencyError(IClassDeclaration declaration, string toolTip)
+        public ModuleCyclicDependencyError(IClassDeclaration declaration, string toolTip)
         {
             ToolTip = toolTip;
             _declaration = declaration;

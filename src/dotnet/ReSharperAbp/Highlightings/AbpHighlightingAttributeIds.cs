@@ -1,5 +1,4 @@
 using JetBrains.TextControl.DocumentMarkup;
-using ReSharperAbp.Dependency;
 
 namespace ReSharperAbp.Highlightings
 {

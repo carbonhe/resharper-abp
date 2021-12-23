@@ -1,6 +1,11 @@
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.RiderTutorials.Utils;
+using JetBrains.Util;
+using ReSharperAbp.Exceptions;
 using ReSharperAbp.Highlightings;
 using ReSharperAbp.Utils;
 
@@ -20,9 +25,23 @@ namespace ReSharperAbp.Analyzers
             }
 
             var classDeclaration = ClassDeclarationNavigator.GetByAttribute(element);
-            if (!classDeclaration.IsAbpModuleClass())
+            var clazz = classDeclaration?.DeclaredElement;
+            if (clazz != null)
             {
-                consumer.AddHighlighting(new DependsOnAttributeUsageError(element));
+                if (!clazz.IsAbpModuleClass())
+                {
+                    consumer.AddHighlighting(new DependsOnAttributeUsageError(element));
+                }
+
+                try
+                {
+                    ModuleUtil.GetDependencies(clazz);
+                }
+                catch (CyclicDependencyException<IClass> exception)
+                {
+                    var message = $"Abp Module Cyclic Dependency: {exception.Segments.Select(c => c.GetFullClrName()).Join(" -> ")}";
+                    consumer.AddHighlighting(new ModuleCyclicDependencyError(classDeclaration, message));
+                }
             }
 
             var expressions = DependsOnAttributeUtil.GetDependentTypeofExpressions(element);

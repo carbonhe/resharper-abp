@@ -13,7 +13,10 @@ namespace ReSharperAbp.Analyzers
     {
         protected override void Run(IClassDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
-            if (element.IsAbpModuleClass())
+            var clazz = element.DeclaredElement;
+
+
+            if (clazz.IsAbpModuleClass())
             {
                 consumer.AddHighlighting(new ModuleMarkOnGutter(element));
             }
