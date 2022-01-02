@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace ReSharperAbp.Util
+namespace ReSharperAbp.Utils
 {
     [DebuggerStepThrough]
     public static class Check

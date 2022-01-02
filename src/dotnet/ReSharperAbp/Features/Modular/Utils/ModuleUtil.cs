@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReSharperAbp.Extensions;
 
-namespace ReSharperAbp.Utils
+namespace ReSharperAbp.Features.Modular.Utils
 {
     public static class ModuleUtil
     {

@@ -5,24 +5,25 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
+using ReSharperAbp.Highlightings;
 
-namespace ReSharperAbp.Highlightings
+namespace ReSharperAbp.Features.Dependency.Highlightings
 {
     [StaticSeverityHighlighting(Severity.INFO, typeof(AbpHighlightingGroup),
-        AttributeId = AbpHighlightingAttributeIds.AbpModuleGutterIconAttribute,
+        AttributeId = AbpHighlightingAttributeIds.AbpDependencyGutterIconAttribute,
         OverlapResolve = OverlapResolveKind.NONE,
         ToolTipFormatString = Message)]
-    public class ModuleMarkOnGutter : IHighlighting
+    public class DependencyMarkOnGutter : IHighlighting
     {
-        private const string Message = "Abp Module";
+        private const string Message = "Abp Dependency";
+
 
         private readonly IClassDeclaration _classDeclaration;
 
-        public ModuleMarkOnGutter(IClassDeclaration classDeclaration)
+        public DependencyMarkOnGutter(IClassDeclaration classDeclaration)
         {
             _classDeclaration = classDeclaration;
         }
-
 
         public bool IsValid() => _classDeclaration == null || _classDeclaration.IsValid();
 
@@ -33,7 +34,7 @@ namespace ReSharperAbp.Highlightings
 
         public class IconGutterMark : IconGutterMarkType
         {
-            public IconGutterMark() : base(AbpIcons.Module.Id)
+            public IconGutterMark() : base(AbpIcons.Dependency.Id)
             {
             }
 

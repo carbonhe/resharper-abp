@@ -5,11 +5,12 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
+using ReSharperAbp.Analyzers;
 using ReSharperAbp.Exceptions;
-using ReSharperAbp.Highlightings;
-using ReSharperAbp.Utils;
+using ReSharperAbp.Features.Modular.Highlightings;
+using ReSharperAbp.Features.Modular.Utils;
 
-namespace ReSharperAbp.Analyzers
+namespace ReSharperAbp.Features.Modular.Analyzers
 {
     [ElementProblemAnalyzer(typeof(IAttribute), HighlightingTypes = new[]
     {

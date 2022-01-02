@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Util;
 using ReSharperAbp.Exceptions;
-using ReSharperAbp.Util;
 
 namespace ReSharperAbp.Extensions
 {

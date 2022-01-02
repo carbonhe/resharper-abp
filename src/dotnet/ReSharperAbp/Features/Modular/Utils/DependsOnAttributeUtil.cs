@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReSharperAbp.Utils
+namespace ReSharperAbp.Features.Modular.Utils
 {
     public static class DependsOnAttributeUtil
     {

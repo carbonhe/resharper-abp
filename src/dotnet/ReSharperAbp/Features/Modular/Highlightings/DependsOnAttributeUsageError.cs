@@ -2,8 +2,9 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReSharperAbp.Highlightings;
 
-namespace ReSharperAbp.Highlightings
+namespace ReSharperAbp.Features.Modular.Highlightings
 {
     [RegisterConfigurableSeverity(
         SeverityId,

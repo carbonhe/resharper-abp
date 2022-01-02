@@ -1,9 +1,10 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReSharperAbp.Highlightings;
-using ReSharperAbp.Utils;
+using ReSharperAbp.Analyzers;
+using ReSharperAbp.Features.Modular.Highlightings;
+using ReSharperAbp.Features.Modular.Utils;
 
-namespace ReSharperAbp.Analyzers
+namespace ReSharperAbp.Features.Modular.Analyzers
 {
     [ElementProblemAnalyzer(typeof(IClassDeclaration), HighlightingTypes = new[]
     {
